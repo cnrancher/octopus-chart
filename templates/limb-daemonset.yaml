@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "octopus.fullname.limb" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "octopus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: limb
+spec:
+  selector:
+    matchLabels:
+      {{- include "octopus.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: limb
+  template:
+    metadata:
+      labels:
+        {{- include "octopus.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: limb
+    spec:
+      serviceAccountName: {{ template "octopus.fullname" . }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: limb
+        args:
+        - limb
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        image: {{ .Values.octopus.image.repository }}:{{ .Values.octopus.image.tag }}
+        resources:
+          {{- toYaml .Values.octopus.resources | nindent 12 }}
+        volumeMounts:
+        - mountPath: /var/lib/octopus/adaptors/
+          name: sockets
+      {{- with .Values.octopus.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.octopus.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      {{- with .Values.octopus.nodeSelector }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - hostPath:
+          path: /var/lib/octopus/adaptors/
+          type: DirectoryOrCreate
+        name: sockets

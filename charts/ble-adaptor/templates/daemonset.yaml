@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "ble-adaptor.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "ble-adaptor.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "ble-adaptor.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "ble-adaptor.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ template "ble-adaptor.fullname" . }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: ble
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        volumeMounts:
+        - mountPath: /var/lib/octopus/adaptors/
+          name: sockets
+        resources:
+        {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      nodeSelector:
+      {{- with .Values.nodeSelector }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - hostPath:
+          path: /var/lib/octopus/adaptors/
+          type: DirectoryOrCreate
+        name: sockets

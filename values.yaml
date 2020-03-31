@@ -1,0 +1,59 @@
+# Default values for octopus.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+global:
+  imagePullSecrets: []
+
+octopus:
+  replicaCount: 1
+
+  image:
+    repository: guangbo/octopus
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  fullnameOverride: ""
+  nameOverride: ""
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+adaptors:
+  ble:
+    enabled: true
+    image:
+      repository: guangbo/octopus-adaptor-ble
+      tag: latest
+
+  modbus:
+    enabled: true
+    image:
+      repository: guangbo/octopus-adaptor-modbus
+      tag: latest
+
+edgeUI:
+  enabled: false
+  image:
+    repository: guangbo/edge-ui
+    tag: latest
+  service:
+    type: NodePort
+  apiController:
+    image:
+      repository: guangbo/edge-api-controller
+      tag: noauth

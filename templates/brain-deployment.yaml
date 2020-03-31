@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "octopus.fullname.brain" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "octopus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: brain
+spec:
+  replicas: {{ .Values.octopus.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "octopus.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: brain
+  template:
+    metadata:
+      labels:
+        {{- include "octopus.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: brain
+    spec:
+      serviceAccountName: {{ template "octopus.fullname" . }}
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: octopus
+        image: {{ .Values.octopus.image.repository }}:{{ .Values.octopus.image.tag }}
+        args:
+        - brain
+        - --enable-leader-election
+        - --disable-admission-webhook
+        resources:
+          {{- toYaml .Values.octopus.resources | nindent 12 }}
+      {{- with .Values.octopus.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.octopus.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+      {{- with .Values.octopus.nodeSelector }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 30

@@ -1,0 +1,11 @@
+Octopus has been installed.
+
+NOTE:  Octopus and device adaptors may take several minutes to fully initialize. Please standby while services comes up.
+
+Check out our docs at https://github.com/cnrancher/octopus
+
+{{- if not .Values.edgeUI.enabled -}}
+Enable the UI to view the edge dashboard with device management ability.
+{{- end -}}
+
+Happy Containering!
