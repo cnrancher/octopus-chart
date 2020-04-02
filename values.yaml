@@ -54,7 +54,8 @@ edge-ui:
     repository: guangbo/edge-ui
     tag: latest
   service:
-    type: NodePort
+    type: LoadBalancer
+    port: 8088
   apiController:
     image:
       repository: guangbo/edge-api-controller
