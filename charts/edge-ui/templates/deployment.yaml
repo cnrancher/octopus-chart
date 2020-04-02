@@ -29,7 +29,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: API
-            value: "https://{{ template "edge-api-controller.fullname" . }}.{{ .Values.apiController.namesapce }}:443"
+            value: "https://{{ template "edge-api-controller.fullname" . }}.{{ .Values.apiController.namespace }}:443"
           ports:
             - name: http
               containerPort: 80
@@ -46,6 +46,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
+        beta.kubernetes.io/os: linux
         {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- with .Values.affinity }}

@@ -14,7 +14,8 @@ spec:
       labels:
         {{- include "ble-adaptor.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ template "ble-adaptor.fullname" . }}
+      hostNetwork: true
+      serviceAccountName: {{ template "octopus.serviceAccountName" . }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -22,6 +23,8 @@ spec:
       containers:
       - name: ble
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        securityContext:
+          privileged: true
         volumeMounts:
         - mountPath: /var/lib/octopus/adaptors/
           name: sockets

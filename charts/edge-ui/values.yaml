@@ -4,7 +4,7 @@
 apiController:
   namespace: kube-system
   image:
-    repository: guangbo/edge-api-controller
+    repository: cnrancher/edge-api-controller
     tag: latest
   service:
     type: ClusterIP

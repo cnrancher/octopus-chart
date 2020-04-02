@@ -60,3 +60,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "octopus.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
+
+{{- define "octopus.serviceAccountName" -}}
+{{- printf "%s-%s" .Release.Name .Values.global.serviceAccount.name | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}

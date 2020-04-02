@@ -17,7 +17,7 @@ spec:
         {{- include "octopus.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: limb
     spec:
-      serviceAccountName: {{ template "octopus.fullname" . }}
+      serviceAccountName: {{ template "octopus.serviceAccountName" . }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -46,7 +46,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       nodeSelector:
-        beta.kubernetes.io/os: linux
       {{- with .Values.octopus.nodeSelector }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

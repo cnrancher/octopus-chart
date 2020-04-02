@@ -3,6 +3,8 @@
 # Declare variables to be passed into your templates.
 global:
   imagePullSecrets: []
+  serviceAccount:
+    name: octopus
 
 octopus:
   replicaCount: 1
@@ -33,21 +35,21 @@ octopus:
 
   affinity: {}
 
-adaptors:
-  ble:
-    enabled: true
-    image:
-      repository: guangbo/octopus-adaptor-ble
-      tag: latest
 
-  modbus:
-    enabled: true
-    image:
-      repository: guangbo/octopus-adaptor-modbus
-      tag: latest
+ble-adaptor:
+  enabled: true
+  image:
+    repository: guangbo/octopus-adaptor-ble
+    tag: latest
 
-edgeUI:
-  enabled: false
+modbus-adaptor:
+  enabled: true
+  image:
+    repository: guangbo/octopus-adaptor-modbus
+    tag: latest
+
+edge-ui:
+  enabled: true
   image:
     repository: guangbo/edge-ui
     tag: latest

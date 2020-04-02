@@ -36,6 +36,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
+        beta.kubernetes.io/os: linux
         {{- toYaml . | nindent 8 }}
       {{- end }}
     {{- with .Values.affinity }}

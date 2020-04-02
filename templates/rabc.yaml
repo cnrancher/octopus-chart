@@ -3,7 +3,7 @@ kind: Role
 metadata:
   labels:
     {{- include "octopus.labels" . | nindent 4 }}
-  name: octopus-leader-election-role
+  name: {{ .Release.Name }}-leader-election-role
   namespace: {{ .Release.Namespace }}
 rules:
 - apiGroups:
@@ -38,20 +38,8 @@ kind: ClusterRole
 metadata:
   labels:
     {{- include "octopus.labels" . | nindent 4 }}
-  name: octopus-manager-role
+  name: {{ .Release.Name }}-manager-role
 rules:
-- apiGroups:
-  - devices.edge.cattle.io
-  resources:
-  - '*'
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
 - apiGroups:
   - ""
   resources:
@@ -98,15 +86,15 @@ kind: RoleBinding
 metadata:
   labels:
     {{- include "octopus.labels" . | nindent 4 }}
-  name: octopus-leader-election-rolebinding
+  name: {{ .Release.Name }}-leader-election-rolebinding
   namespace: {{ .Release.Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: octopus-leader-election-role
+  name: {{ .Release.Name }}-leader-election-role
 subjects:
 - kind: ServiceAccount
-  name: {{ template "octopus.fullname" . }}
+  name: {{ template "octopus.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -114,12 +102,12 @@ kind: ClusterRoleBinding
 metadata:
   labels:
     {{- include "octopus.labels" . | nindent 4 }}
-  name: octopus-manager-rolebinding
+  name: {{ .Release.Name }}-manager-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: octopus-manager-role
+  name: {{ .Release.Name }}-manager-role
 subjects:
 - kind: ServiceAccount
-  name: {{ template "octopus.fullname" . }}
+  name: {{ template "octopus.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}

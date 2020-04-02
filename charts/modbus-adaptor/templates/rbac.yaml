@@ -38,5 +38,5 @@ roleRef:
   name: {{ template "modbus-adaptor.fullname" . }}-role
 subjects:
 - kind: ServiceAccount
-  name: {{ template "modbus-adaptor.fullname" . }}
+  name: {{ template "octopus.serviceAccountName" . }}
   namespace: {{ .Release.Namespace }}

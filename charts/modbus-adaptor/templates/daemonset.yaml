@@ -14,7 +14,7 @@ spec:
       labels:
       {{- include "modbus-adaptor.selectorLabels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ template "modbus-adaptor.fullname" . }}
+      serviceAccountName: {{ template "octopus.serviceAccountName" . }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

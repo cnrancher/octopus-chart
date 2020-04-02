@@ -23,19 +23,19 @@ appVersion: 0.1.0
 dependencies: # A list of the chart requirements (optional)
   - name: ble-adaptor
     version: 0.1.0
-    condition: adaptors.ble.enabled
+    condition: ble-adaptor.enabled
     tags:
       - octopus-adaptor
     enabled: true
   - name: modbus-adaptor
     version: 0.1.0
-    condition: adaptors.modbus.enabled
+    condition: modbus-adaptor.enabled
     tags:
       - octopus-adaptor
     enabled: true
   - name: edge-ui
     version: 0.1.0
-    condition: edgeUI.enabled
+    condition: edge-ui.enabled
     tags:
     - edge-ui
     enabled: true
