@@ -22,9 +22,13 @@ spec:
       containers:
       - name: modbus
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        securityContext:
+          privileged: true
         volumeMounts:
         - mountPath: /var/lib/octopus/adaptors/
           name: sockets
+        - mountPath: /dev
+          name: dev
         resources:
         {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.affinity }}
@@ -44,3 +48,6 @@ spec:
           path: /var/lib/octopus/adaptors/
           type: DirectoryOrCreate
         name: sockets
+      - hostPath:
+          path: /dev
+        name: dev

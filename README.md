@@ -13,7 +13,7 @@ Read and follow the [Helm installation guide](https://helm.sh/docs/intro/install
 In order to be able to use the charts in this repository, add the name and URL to your Helm client:
 
 ```console
-helm repo add cnrancher http://charts.cnrancher.cn
+helm repo add octopus http://charts.cnrancher.cn/octopus
 helm repo update
 ```
 
@@ -21,7 +21,7 @@ helm repo update
 
 To install the Octopus Chart into your Kubernetes/k3s cluster use:
 ```
-helm install --namespace octopus-system octopus cnrancher/octopus
+helm install --namespace octopus-system octopus octopus/octopus
 ```
 
 After installation succeeds, you can get a status of Chart

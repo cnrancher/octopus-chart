@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "edge-api-controller.fullname" . }}
+  name: {{ include "edge-api-server.fullname" . }}
   namespace: {{ .Values.apiController.namespace }}
   labels:
-    {{- include "edge-api-controller.labels" . | nindent 4 }}
+    {{- include "edge-api-server.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "edge-api-controller.selectorLabels" . | nindent 6 }}
+      {{- include "edge-api-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "edge-api-controller.selectorLabels" . | nindent 8 }}
+        {{- include "edge-api-server.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ template "edge-api-controller.fullname" . }}
+      serviceAccountName: {{ template "edge-api-server.fullname" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:

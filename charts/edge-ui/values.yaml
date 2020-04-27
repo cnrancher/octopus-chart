@@ -4,7 +4,7 @@
 apiController:
   namespace: kube-system
   image:
-    repository: cnrancher/edge-api-controller
+    repository: cnrancher/edge-api-server
     tag: latest
   service:
     type: ClusterIP
@@ -13,7 +13,7 @@ apiController:
 replicaCount: 1
 
 image:
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   repository: guangbo/edge-ui
   tag: latest
 
