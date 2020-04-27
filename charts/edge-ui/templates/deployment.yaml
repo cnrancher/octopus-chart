@@ -29,19 +29,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: API
-            value: "https://{{ template "edge-api-controller.fullname" . }}.{{ .Values.apiController.namespace }}:443"
+            value: "https://{{ template "edge-api-server.fullname" . }}.{{ .Values.apiController.namespace }}:443"
           ports:
             - name: http
               containerPort: 80
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

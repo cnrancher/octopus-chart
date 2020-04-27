@@ -10,8 +10,8 @@ octopus:
   replicaCount: 1
 
   image:
-    repository: guangbo/octopus
-    tag: latest
+    repository: cnrancher/octopus
+    tag: v0.0.1
     pullPolicy: IfNotPresent
 
   fullnameOverride: ""
@@ -33,30 +33,40 @@ octopus:
 
   tolerations: []
 
-  affinity: {}
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: beta.kubernetes.io/os
+            operator: In
+            values:
+            - linux
+
 
 
 ble-adaptor:
   enabled: true
   image:
-    repository: guangbo/octopus-adaptor-ble
-    tag: latest
+    repository: cnrancher/octopus-adaptor-ble
+    tag: v0.0.1
 
 modbus-adaptor:
   enabled: true
   image:
-    repository: guangbo/octopus-adaptor-modbus
-    tag: latest
+    repository: cnrancher/octopus-adaptor-modbus
+    tag: v0.0.1
 
 edge-ui:
   enabled: true
   image:
-    repository: guangbo/edge-ui
+    repository: 13025759296/edge-ui
     tag: latest
   service:
     type: LoadBalancer
     port: 8088
   apiController:
     image:
-      repository: guangbo/edge-api-controller
-      tag: noauth
+      repository: guangbo/edge-api-server
+      tag: latest
