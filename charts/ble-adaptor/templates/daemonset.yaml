@@ -15,7 +15,6 @@ spec:
         {{- include "ble-adaptor.selectorLabels" . | nindent 8 }}
     spec:
       hostNetwork: true
-      serviceAccountName: {{ template "octopus.serviceAccountName" . }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}

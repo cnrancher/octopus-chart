@@ -25,11 +25,21 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{- define "octopus.fullname.brain" -}}
+{{- $name := default .Chart.Name .Values.octopus.nameOverride -}}
+{{- if contains $name .Release.Name -}}
 {{- printf "%s-%s" .Release.Name "brain" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s-%s" .Release.Name $name "brain" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{- end -}}
 
 {{- define "octopus.fullname.limb" -}}
+{{- $name := default .Chart.Name .Values.octopus.nameOverride -}}
+{{- if contains $name .Release.Name -}}
 {{- printf "%s-%s" .Release.Name "limb" | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s-%s" .Release.Name $name "limb" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -44,13 +54,11 @@ Common labels
 */}}
 {{- define "octopus.labels" -}}
 helm.sh/chart: {{ include "octopus.chart" . }}
-{{ include "octopus.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/name: {{ .Chart.Name }}
-app.kubernetes.io/version: {{ .Chart.AppVersion }}
 {{- end -}}
 
 {{/*
@@ -59,8 +67,4 @@ Selector labels
 {{- define "octopus.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "octopus.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{- define "octopus.serviceAccountName" -}}
-{{- printf "%s-%s" .Release.Name .Values.global.serviceAccount.name | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
