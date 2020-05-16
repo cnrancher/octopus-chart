@@ -3,19 +3,20 @@
 # Declare variables to be passed into your templates.
 global:
   imagePullSecrets: []
-  serviceAccount:
-    name: octopus
 
 octopus:
   replicaCount: 1
 
   image:
     repository: cnrancher/octopus
-    tag: v0.0.1
-    pullPolicy: IfNotPresent
+    tag: master
+    pullPolicy: Always
 
   fullnameOverride: ""
   nameOverride: ""
+
+  serviceMonitor:
+    enabled: false
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
@@ -35,31 +36,35 @@ octopus:
 
   affinity:
     nodeAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 1
-        preference:
-          matchExpressions:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
           - key: beta.kubernetes.io/os
             operator: In
             values:
             - linux
-
-
+        - matchExpressions:
+          - key: kubernetes.io/os
+            operator: In
+            values:
+            - linux
 
 ble-adaptor:
   enabled: true
   image:
     repository: cnrancher/octopus-adaptor-ble
-    tag: v0.0.1
+    tag: master
+    pullPolicy: Always
 
 modbus-adaptor:
   enabled: true
   image:
     repository: cnrancher/octopus-adaptor-modbus
-    tag: v0.0.1
+    tag: master
+    pullPolicy: Always
 
 edge-ui:
-  enabled: true
+  enabled: false
   image:
     repository: 13025759296/edge-ui
     tag: latest

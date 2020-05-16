@@ -17,7 +17,6 @@ spec:
         {{- include "octopus.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: limb
     spec:
-      serviceAccountName: {{ template "octopus.serviceAccountName" . }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -26,6 +25,9 @@ spec:
       - name: limb
         args:
         - limb
+        ports:
+        - containerPort: 8080
+          name: metrics
         env:
         - name: NODE_NAME
           valueFrom:
@@ -54,3 +56,4 @@ spec:
           path: /var/lib/octopus/adaptors/
           type: DirectoryOrCreate
         name: sockets
+      terminationGracePeriodSeconds: 30

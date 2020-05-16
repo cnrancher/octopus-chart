@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "octopus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: brain
+  name: {{ template "octopus.fullname.brain" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: metrics
+  selector:
+    {{- include "octopus.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: brain
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    {{- include "octopus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: limb
+  name: {{ template "octopus.fullname.limb" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: metrics
+  selector:
+    {{- include "octopus.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: limb

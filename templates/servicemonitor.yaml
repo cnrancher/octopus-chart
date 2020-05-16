@@ -1,0 +1,63 @@
+{{- if .Values.octopus.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    {{- include "octopus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: brain
+  name: {{ template "octopus.fullname.brain" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpoints:
+  - honorLabels: false
+    path: /metrics
+    port: metrics
+    relabelings:
+    - action: replace
+      regex: (.+)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_host_ip
+      targetLabel: host_ip
+    - action: replace
+      regex: (.+)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: node
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/component: brain
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    {{- include "octopus.labels" . | nindent 4 }}
+    app.kubernetes.io/component: limb
+  name: {{ template "octopus.fullname.limb" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  endpoints:
+  - honorLabels: false
+    path: /metrics
+    port: metrics
+    relabelings:
+    - action: replace
+      regex: (.+)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_host_ip
+      targetLabel: host_ip
+    - action: replace
+      regex: (.+)
+      replacement: $1
+      sourceLabels:
+      - __meta_kubernetes_pod_node_name
+      targetLabel: node
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Chart.Name }}
+      app.kubernetes.io/component: limb
+{{- end -}}

@@ -18,13 +18,15 @@ spec:
         {{- include "octopus.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: brain
     spec:
-      serviceAccountName: {{ template "octopus.serviceAccountName" . }}
       {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
       - name: octopus
+        ports:
+        - containerPort: 8080
+          name: metrics
         image: {{ .Values.octopus.image.repository }}:{{ .Values.octopus.image.tag }}
         args:
         - brain
