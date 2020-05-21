@@ -1,20 +1,13 @@
 # Default values for edge-ui.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-apiController:
-  namespace: kube-system
-  image:
-    repository: cnrancher/edge-api-server
-    tag: latest
-  service:
-    type: ClusterIP
-    port: 443
+apiNamespace: kube-system
 
 replicaCount: 1
 
 image:
   pullPolicy: Always
-  repository: guangbo/edge-ui
+  repository: cnrancher/edge-api-server
   tag: latest
 
 nameOverride: ""
@@ -41,8 +34,8 @@ securityContext: {}
   # runAsUser: 1000
 
 service:
-  type: NodePort
-  port: 80
+  type: LoadBalancer
+  port: 8443
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -60,4 +53,17 @@ nodeSelector: {}
 
 tolerations: []
 
-affinity: {}
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: beta.kubernetes.io/os
+          operator: In
+          values:
+          - linux
+      - matchExpressions:
+        - key: kubernetes.io/os
+          operator: In
+          values:
+          - linux
