@@ -1,23 +1,23 @@
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "edge-api-server.fullname" . }}-rolebinding
+  name: {{ template "edge-ui.fullname" . }}-rolebinding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: cluster-admin
 subjects:
 - kind: ServiceAccount
-  name: {{ template "edge-api-server.fullname" . }}
-  namespace: {{ .Values.apiController.namespace }}
+  name: {{ template "edge-ui.fullname" . }}
+  namespace: {{ .Values.apiNamespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ template "edge-api-server.fullname" . }}
-  namespace: {{ .Values.apiController.namespace }}
+  name: {{ template "edge-ui.fullname" . }}
+  namespace: {{ .Values.apiNamespace }}
   labels:
-    {{- include "edge-api-server.labels" . | nindent 4 }}
+    {{- include "edge-ui.labels" . | nindent 4 }}
   {{- with .Values.serviceAccount.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}

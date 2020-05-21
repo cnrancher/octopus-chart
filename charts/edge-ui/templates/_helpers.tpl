@@ -24,10 +24,6 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{- define "edge-api-server.fullname" -}}
-{{- printf "%s-%s" .Release.Name "api-server" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{/*
 Create chart name and version as used by the chart label.
 */}}
@@ -48,15 +44,6 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 app.kubernetes.io/component: ui
 {{- end -}}
 
-{{- define "edge-api-server.labels" -}}
-helm.sh/chart: {{ include "edge-ui.chart" . }}
-{{ include "edge-api-server.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/component: api-controller
-{{- end -}}
 
 {{/*
 Selector labels
@@ -67,11 +54,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/component: ui
 {{- end -}}
 
-{{- define "edge-api-server.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "edge-ui.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-app.kubernetes.io/component: api-controller
-{{- end -}}
 
 {{/*
 Create the name of the service account to use

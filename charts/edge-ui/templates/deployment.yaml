@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "edge-ui.fullname" . }}
+  namespace: {{ .Values.apiNamespace }}
   labels:
     {{- include "edge-ui.labels" . | nindent 4 }}
 spec:
@@ -22,17 +23,14 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: edge-api-server
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-          - name: API
-            value: "https://{{ template "edge-api-server.fullname" . }}.{{ .Values.apiController.namespace }}:443"
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 8443
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

@@ -64,14 +64,10 @@ modbus-adaptor:
     pullPolicy: Always
 
 edge-ui:
-  enabled: false
+  enabled: true
   image:
-    repository: 13025759296/edge-ui
-    tag: latest
+    repository: guangbo/edge-api-server
+    tag: v0.1.0
   service:
     type: LoadBalancer
-    port: 8088
-  apiController:
-    image:
-      repository: guangbo/edge-api-server
-      tag: latest
+    port: 8443
