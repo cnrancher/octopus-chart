@@ -67,7 +67,7 @@ edge-ui:
   enabled: true
   image:
     repository: guangbo/edge-api-server
-    tag: v0.1.0
+    tag: master
   service:
     type: LoadBalancer
     port: 8443

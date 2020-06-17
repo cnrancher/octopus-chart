@@ -3,18 +3,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
-    devices.edge.cattle.io/enable: "true"
-    devices.edge.cattle.io/status-property: '{"name":"string","dataType":"string","value":"string","updatedAt":"date"}'
     devices.edge.cattle.io/description: Modbus is a communication protocol developed
       by Modicon system. In short, it is a method for transmitting information between
       electronic devices through a serial line. The Modbus protocol is a master-slave
       architecture protocol. The Modbus adapter can be called a Modbus master station
       and is responsible for connecting and collecting information from Modbus slave
       stations (i.e, devices).
+    devices.edge.cattle.io/enable: "true"
     devices.edge.cattle.io/icon: https://octopus-assets.oss-cn-beijing.aliyuncs.com/adaptor-icons/modbus.svg
+    devices.edge.cattle.io/status-property: '{"name":"string","dataType":"string","value":"string","updatedAt":"date"}'
   labels:
     app.kubernetes.io/name: octopus-adaptor-modbus
-    app.kubernetes.io/version: 0.0.1
+    app.kubernetes.io/version: master
   name: modbusdevices.devices.edge.cattle.io
 spec:
   group: devices.edge.cattle.io
@@ -58,6 +58,13 @@ spec:
           spec:
             description: ModbusDeviceSpec defines the desired state of ModbusDevice
             properties:
+              parameters:
+                properties:
+                  syncInterval:
+                    type: string
+                  timeout:
+                    type: string
+                type: object
               properties:
                 items:
                   description: DeviceProperty describes an individual device property
@@ -209,9 +216,3 @@ spec:
     storage: true
     subresources:
       status: {}
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
