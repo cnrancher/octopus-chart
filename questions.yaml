@@ -1,0 +1,148 @@
+questions:
+- variable: defaultImage
+  default: true
+  description: "Use default Docker image"
+  label: Use Default Image
+  type: boolean
+  show_subquestion_if: false
+  group: "Container Images"
+  subquestions:
+    - variable: octopus.image.repository
+      default: "cnrancher/octopus"
+      description: "Octopus docker image repository"
+      type: string
+      label: Octopus Image Repository
+      required: true
+    - variable: octopus.image.tag
+      default: "master"
+      description: "Octopus docker image tag"
+      type: string
+      label: Octopus Image Tag
+      required: true
+    - variable: octopus.image.pullPolicy
+      label: Octopus Image Pull Policy
+      description: "Specifies when to pull the Octopus image container"
+      type: string
+      required: true
+      default: "Always"
+    - variable: edge-ui.image.repository
+      default: "cnrancher/edge-api-server"
+      description: "Edge UI docker image repository"
+      type: string
+      label: Edge UI Image Repository
+      required: true
+      show_if: "edge-ui.enabled=true"
+    - variable: edge-ui.image.tag
+      default: "master"
+      description: "Edge UI docker image tag"
+      type: string
+      label: Edge UI Image Tag
+      required: true
+      show_if: "edge-ui.enabled=true"
+    - variable: edge-ui.image.pullPolicy
+      label: Edge UI Image Pull Policy
+      description: "Specifies when to pull the Edge UI image container"
+      type: string
+      required: true
+      default: "Always"
+      show_if: "edge-ui.enabled=true"
+    - variable: ble-adaptor.image.repository
+      default: "cnrancher/octopus-adaptor-ble"
+      description: "BLE adaptor docker image repository"
+      type: string
+      label: BLE Adaptor Image Repository
+      required: true
+      show_if: "ble-adaptor.enabled=true"
+    - variable: ble-adaptor.image.tag
+      default: "master"
+      description: "BLE adaptor docker image tag"
+      type: string
+      label: BLE Adaptor Image Tag
+      required: true
+      show_if: "ble-adaptor.enabled=true"
+    - variable: ble-adaptor.image.pullPolicy
+      label: BLE Adaptor Image Pull Policy
+      description: "Specifies when to pull the BLE adaptor image container"
+      type: string
+      required: true
+      default: "Always"
+      show_if: "ble-adaptor.enabled=true"
+    - variable: modbus-adaptor.image.repository
+      default: "cnrancher/octopus-adaptor-modbus"
+      description: "Modbus adaptor docker image repository"
+      type: string
+      label: Modbus Adaptor Image Repository
+      required: true
+      show_if: "modbus-adaptor.enabled=true"
+    - variable: modbus-adaptor.image.tag
+      default: "master"
+      description: "Modbus adaptor docker image tag"
+      type: string
+      label: Modbus Adaptor Image Tag
+      required: true
+      show_if: "modbus-adaptor.enabled=true"
+    - variable: modbus-adaptor.image.pullPolicy
+      label: Modbus Adaptor Image Pull Policy
+      description: "Specifies when to pull the Modbus adaptor image container"
+      type: string
+      required: true
+      default: "Always"
+      show_if: "modbus-adaptor.enabled=true"
+- variable: octopus.replicaCount
+  group: "Octopus Setting"
+  label: Octopus Replica Count
+  default: 1
+  type: int
+  min: 1
+  max: 10
+- variable: octopus.serviceMonitor.enabled
+  group: "Octopus Setting"
+  label: Enable octopus service monitor
+  default: false
+  type: boolean
+- variable: ble-adaptor.enabled
+  label: Enable ble adaptor
+  default: true
+  description: "If true, will create ble adaptor"
+  group: "BLE Adaptor"
+  type: boolean
+  required: true
+- variable: modbus-adaptor.enabled
+  label: Enable modbus adaptor
+  group: "Modbus Adaptor"
+  default: true
+  description: "If true, will create modbus adaptor"
+  type: boolean
+  required: true
+- variable: edge-ui.enabled
+  label: Enable edge ui
+  group: "Edge UI"
+  default: true
+  description: "If true, will create edge ui"
+  type: boolean
+  required: true
+- variable: edge-ui.service.type
+  group: "Edge UI"
+  label: Edge UI Service
+  default: "LoadBalancer"
+  description: "Define Edge UI service type"
+  type: enum
+  options:
+    - "ClusterIP"
+    - "NodePort"
+    - "LoadBalancer"
+  show_if: "edge-ui.enabled=true"
+  subquestions:
+    - variable: edge-ui.service.port
+      default: "8443"
+      description: "NodePort port number(to set explicitly)"
+      type: int
+      show_if: "edge-ui.service.type=NodePort||edge-ui.service.type=LoadBalancer"
+      label: Edge UI Service NodePort number
+- variable: edge-ui.apiNamespace
+  group: "Edge UI"
+  label: Edge UI Namespace
+  default: "kube-system"
+  show_if: "edge-ui.enabled=true"
+  type: string
+  required: true
