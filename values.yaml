@@ -63,10 +63,24 @@ modbus-adaptor:
     tag: master
     pullPolicy: Always
 
-edge-ui:
+mqtt-adaptor:
   enabled: true
   image:
-    repository: guangbo/edge-api-server
+    repository: cnrancher/octopus-adaptor-mqtt
+    tag: master
+    pullPolicy: Always
+
+opcua-adaptor:
+  enabled: true
+  image:
+    repository: cnrancher/octopus-adaptor-opcua
+    tag: master
+    pullPolicy: Always
+
+octopus-ui:
+  enabled: true
+  image:
+    repository: cnrancher/octopus-ui
     tag: master
   service:
     type: LoadBalancer

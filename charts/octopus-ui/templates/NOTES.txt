@@ -1,0 +1,5 @@
+Octopus UI has been installed.
+
+NOTE:  Octopus  UI and its api-controller may take several seconds to fully initialize. Please standby while services comes up.
+
+Check out our docs at https://github.com/cnrancher/octopus-ui

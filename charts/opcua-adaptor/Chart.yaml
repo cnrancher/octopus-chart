@@ -1,6 +1,6 @@
 apiVersion: v2
-name: edge-ui
-description: A Helm chart for Edge UI and API-controller
+name: opcua-adaptor
+description: A Helm chart for Octopus OPC-UA adaptor
 
 # A chart can be either an 'application' or a 'library' chart.
 #

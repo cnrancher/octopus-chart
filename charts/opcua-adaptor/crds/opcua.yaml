@@ -2,36 +2,31 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    devices.edge.cattle.io/description: Modbus is a communication protocol developed
-      by Modicon system. In short, it is a method for transmitting information between
-      electronic devices through a serial line. The Modbus protocol is a master-slave
-      architecture protocol. The Modbus adapter can be called a Modbus master station
-      and is responsible for connecting and collecting information from Modbus slave
-      stations (i.e, devices).
+    devices.edge.cattle.io/description: OPC Unified Architecture (OPC UA) is a machine
+      to machine communication protocol for industrial automation developed by the
+      OPC Foundation. OPC-UA adaptor focus on communicating with industrial equipment
+      and systems for data collection and control.
     devices.edge.cattle.io/device-property: '{"name":"string","type":"string","value":"string","updatedAt":"date"}'
     devices.edge.cattle.io/enable: "true"
-    devices.edge.cattle.io/icon: https://octopus-assets.oss-cn-beijing.aliyuncs.com/adaptor-icons/modbus.svg
+    devices.edge.cattle.io/icon: https://octopus-assets.oss-cn-beijing.aliyuncs.com/adaptor-icons/opc-ua.svg
   labels:
-    app.kubernetes.io/name: octopus-adaptor-modbus
+    app.kubernetes.io/name: octopus-adaptor-opcua
     app.kubernetes.io/version: master
-  name: modbusdevices.devices.edge.cattle.io
+  name: opcuadevices.devices.edge.cattle.io
 spec:
   group: devices.edge.cattle.io
   names:
-    kind: ModbusDevice
-    listKind: ModbusDeviceList
-    plural: modbusdevices
+    kind: OPCUADevice
+    listKind: OPCUADeviceList
+    plural: opcuadevices
     shortNames:
-    - modbus
-    singular: modbusdevice
+    - opcua
+    singular: opcuadevice
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.protocol..endpoint
+    - jsonPath: .spec.protocol.endpoint
       name: ENDPOINT
-      type: string
-    - jsonPath: .spec.protocol..workerID
-      name: WORKER ID
       type: string
     - jsonPath: .metadata.creationTimestamp
       name: AGE
@@ -39,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: ModbusDevice is the schema for the Modbus device API.
+        description: OPCUADevice is the schema for the OPC-UA device API.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -54,7 +49,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ModbusDeviceSpec defines the desired state of ModbusDevice.
+            description: OPCUADeviceSpec defines the desired state of OPCUADevice.
             properties:
               extension:
                 description: Specifies the extension of device.
@@ -403,8 +398,8 @@ spec:
               properties:
                 description: Specifies the properties of device.
                 items:
-                  description: ModbusDeviceProperty defines the desired property of
-                    ModbusDevice.
+                  description: OPCUADeviceProperty defines the desired property of
+                    OPCUADevice.
                   properties:
                     description:
                       description: Specifies the description of property.
@@ -419,10 +414,18 @@ spec:
                     type:
                       description: Specifies the type of property.
                       enum:
-                      - int
                       - float
+                      - double
+                      - int64
+                      - int32
+                      - int16
+                      - uint64
+                      - uint32
+                      - uint16
                       - string
                       - boolean
+                      - byteString
+                      - datetime
                       type: string
                     value:
                       description: Specifies the value of property, only available
@@ -431,49 +434,14 @@ spec:
                     visitor:
                       description: Specifies the visitor of property.
                       properties:
-                        offset:
-                          description: Specifies the starting offset of register for
-                            read/write data.
-                          type: integer
-                        orderOfOperations:
-                          description: Specifies the operations in order if needed.
-                          items:
-                            description: ModbusDeviceArithmeticOperation defines the
-                              arithmetic operation of ModbusDevice.
-                            properties:
-                              type:
-                                description: Specifies the type of arithmetic operation.
-                                enum:
-                                - Add
-                                - Subtract
-                                - Multiply
-                                - Divide
-                                type: string
-                              value:
-                                description: Specifies the value for arithmetic operation,
-                                  which is in form of float string.
-                                type: string
-                            required:
-                            - type
-                            - value
-                            type: object
-                          type: array
-                          x-kubernetes-list-type: atomic
-                        quantity:
-                          description: Specifies the quantity of register.
-                          type: integer
-                        register:
-                          description: Specifies the register to visit.
-                          enum:
-                          - CoilRegister
-                          - DiscreteInputRegister
-                          - InputRegister
-                          - HoldingRegister
+                        browseName:
+                          description: Specifies the name of OPC-UA node.
+                          type: string
+                        nodeID:
+                          description: Specifies the id of OPC-UA node, e.g. "ns=1,i=1005".
                           type: string
                       required:
-                      - offset
-                      - quantity
-                      - register
+                      - nodeID
                       type: object
                   required:
                   - name
@@ -487,81 +455,129 @@ spec:
               protocol:
                 description: Specifies the protocol for accessing the device.
                 properties:
-                  rtu:
-                    description: Specifies the connection protocol as RTU
+                  basicAuth:
+                    description: Specifies the username and password that the client
+                      connects to OPC-UA server.
                     properties:
-                      baudRate:
-                        default: 19200
-                        description: Specifies the baud rate of connection, a measurement
-                          of transmission speed. The default value is "19200".
-                        type: integer
-                      dataBits:
-                        default: 8
-                        description: Specifies the data bit of connection, selected
-                          from [5, 6, 7, 8]. The default value is "8".
-                        enum:
-                        - 5
-                        - 6
-                        - 7
-                        - 8
-                        type: integer
-                      endpoint:
-                        description: Specifies the serial port of device, which is
-                          in form of "/dev/ttyS0".
-                        pattern: ^/.*[^/]$
+                      password:
+                        description: Specifies the password for accessing OPC-UA server.
                         type: string
-                      parity:
-                        default: E
-                        description: Specifies the parity of connection, selected
-                          from [N - None, E - Even, O - Odd], the use of N(None) parity
-                          requires 2 stop bits. The default value is "E".
-                        enum:
-                        - "N"
-                        - E
-                        - O
+                      passwordRef:
+                        description: Specifies the relationship of DeviceLink's references
+                          to refer to the value as the password.
+                        properties:
+                          item:
+                            description: Specifies the item name of the referred reference.
+                            type: string
+                          name:
+                            description: Specifies the name of reference.
+                            type: string
+                        required:
+                        - item
+                        - name
+                        type: object
+                      username:
+                        description: Specifies the username for accessing OPC-UA server.
                         type: string
-                      stopBits:
-                        default: 1
-                        description: Specifies the stop bit of connection, selected
-                          from [1, 2], the use of N(None) parity requires 2 stop bits.
-                          The default value is "1".
-                        enum:
-                        - 1
-                        - 2
-                        type: integer
-                      workerID:
-                        description: Specifies the worker ID of device.
-                        type: integer
-                    required:
-                    - endpoint
-                    - workerID
+                      usernameRef:
+                        description: Specifies the relationship of DeviceLink's references
+                          to refer to the value as the username.
+                        properties:
+                          item:
+                            description: Specifies the item name of the referred reference.
+                            type: string
+                          name:
+                            description: Specifies the name of reference.
+                            type: string
+                        required:
+                        - item
+                        - name
+                        type: object
                     type: object
-                  tcp:
-                    description: Specifies the connection protocol as TCP
+                  endpoint:
+                    description: Specifies the URL of OPC-UA server endpoint, which
+                      is start with "opc.tcp://".
+                    pattern: ^opc\.tcp://[^\s]*$
+                    type: string
+                  securityMode:
+                    default: None
+                    description: Specifies the security mode for accessing OPC-UA
+                      server. The default value is "None".
+                    enum:
+                    - None
+                    - Sign
+                    - SignAndEncrypt
+                    type: string
+                  securityPolicy:
+                    default: None
+                    description: Specifies the security policy for accessing OPC-UA
+                      server. The default value is "None".
+                    enum:
+                    - None
+                    - Basic128Rsa15
+                    - Basic256
+                    - Basic256Sha256
+                    - Aes128Sha256RsaOaep
+                    - Aes256Sha256RsaPss
+                    type: string
+                  tlsConfig:
+                    description: Specifies the TLS configuration that the client connects
+                      to OPC-UA server.
                     properties:
-                      endpoint:
-                        description: Specifies the IP address of device, which is
-                          in form of "ip:port".
+                      certFilePEM:
+                        description: Specifies the PEM format content of the certificate(public
+                          key), which is used for client authenticate to the OPC-UA
+                          server.
                         type: string
-                      workerID:
-                        description: Specifies the worker ID of device.
-                        type: integer
-                    required:
-                    - endpoint
-                    - workerID
+                      certFilePEMRef:
+                        description: Specifies the relationship of DeviceLink's references
+                          to refer to the value as the client certificate file PEM
+                          content.
+                        properties:
+                          item:
+                            description: Specifies the item name of the referred reference.
+                            type: string
+                          name:
+                            description: Specifies the name of reference.
+                            type: string
+                        required:
+                        - item
+                        - name
+                        type: object
+                      keyFilePEM:
+                        description: Specifies the PEM format content of the key(private
+                          key), which is used for client authenticate to the OPC-UA
+                          server.
+                        type: string
+                      keyFilePEMRef:
+                        description: Specifies the relationship of DeviceLink's references
+                          to refer to the value as the client key file PEM content.
+                        properties:
+                          item:
+                            description: Specifies the item name of the referred reference.
+                            type: string
+                          name:
+                            description: Specifies the name of reference.
+                            type: string
+                        required:
+                        - item
+                        - name
+                        type: object
                     type: object
+                required:
+                - endpoint
                 type: object
             required:
             - protocol
             type: object
           status:
-            description: ModbusDeviceStatus defines the observed state of ModbusDevice.
+            description: OPCUADeviceStatus defines the observed state of OPCUADevice.
             properties:
               properties:
                 description: Reports the properties of device.
                 items:
-                  description: ModbusDeviceStatusProperty defines the observed property
-                    of ModbusDevice.
+                  description: OPCUADeviceStatusProperty defines the observed property
+                    of OPCUADevice.
                   properties:
                     name:
                       description: Reports the name of property.
@@ -569,10 +585,18 @@ spec:
                     type:
                       description: Reports the type of property.
                       enum:
-                      - int
                       - float
+                      - double
+                      - int64
+                      - int32
+                      - int16
+                      - uint64
+                      - uint32
+                      - uint16
                       - string
                       - boolean
+                      - byteString
+                      - datetime
                       type: string
                     updatedAt:
                       description: Reports the updated timestamp of property.

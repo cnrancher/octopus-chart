@@ -1,0 +1,3 @@
+opc-ua adaptor has been installed.
+
+Check out our docs at https://github.com/cnrancher/octopus/adaptors/opcua

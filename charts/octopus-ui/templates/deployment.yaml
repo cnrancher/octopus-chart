@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "edge-ui.fullname" . }}
+  name: {{ include "octopus-ui.fullname" . }}
   namespace: {{ .Values.apiNamespace }}
   labels:
-    {{- include "edge-ui.labels" . | nindent 4 }}
+    {{- include "octopus-ui.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "edge-ui.selectorLabels" . | nindent 6 }}
+      {{- include "octopus-ui.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "edge-ui.selectorLabels" . | nindent 8 }}
+        {{- include "octopus-ui.selectorLabels" . | nindent 8 }}
     spec:
     {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      serviceAccountName: {{ include "edge-ui.serviceAccountName" . }}
+      serviceAccountName: {{ include "octopus-ui.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: edge-api-server
+        - name: octopus-ui
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
