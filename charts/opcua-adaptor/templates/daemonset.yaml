@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ template "opcua-adaptor.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "opcua-adaptor.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "opcua-adaptor.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "opcua-adaptor.selectorLabels" . | nindent 8 }}
+    spec:
+      hostNetwork: true
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: opcua
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/octopus/adaptors/
+          name: sockets
+        resources:
+        {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      nodeSelector:
+      {{- with .Values.nodeSelector }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+      - hostPath:
+          path: /var/lib/octopus/adaptors/
+          type: DirectoryOrCreate
+        name: sockets

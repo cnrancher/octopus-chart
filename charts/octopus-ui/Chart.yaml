@@ -1,6 +1,6 @@
 apiVersion: v2
-name: octopus
-description: A Helm chart for Rancher Octopus App
+name: octopus-ui
+description: A Helm chart for Octopus UI and API-controller
 
 # A chart can be either an 'application' or a 'library' chart.
 #
@@ -19,35 +19,3 @@ version: 0.1.0
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
 appVersion: 0.1.0
-
-dependencies: # A list of the chart requirements (optional)
-  - name: ble-adaptor
-    version: 0.1.0
-    condition: ble-adaptor.enabled
-    tags:
-      - octopus-adaptor
-    enabled: true
-  - name: modbus-adaptor
-    version: 0.1.0
-    condition: modbus-adaptor.enabled
-    tags:
-      - octopus-adaptor
-    enabled: true
-  - name: opcua-adaptor
-    version: 0.1.0
-    condition: opcua-adaptor.enabled
-    tags:
-      - octopus-adaptor
-    enabled: true
-  - name: mqtt-adaptor
-    version: 0.1.0
-    condition: mqtt-adaptor.enabled
-    tags:
-      - octopus-adaptor
-    enabled: true
-  - name: octopus-ui
-    version: 0.1.0
-    condition: octopus-ui.enabled
-    tags:
-    - octopus-ui
-    enabled: true
