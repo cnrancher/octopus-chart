@@ -14,38 +14,43 @@ type: application
 
 # This is the chart version. This version number should be incremented each time you make changes
 # to the chart and its templates, including the app version.
-version: 0.1.0
+version: 1.0.0
 
 # This is the version number of the application being deployed. This version number should be
 # incremented each time you make changes to the application.
-appVersion: 0.1.0
+appVersion: 1.0.0
 
 dependencies: # A list of the chart requirements (optional)
   - name: ble-adaptor
+    repository: file://charts/ble-adaptor
     version: 0.1.0
     condition: ble-adaptor.enabled
     tags:
       - octopus-adaptor
     enabled: true
   - name: modbus-adaptor
+    repository: file://charts/ble-adaptor
     version: 0.1.0
     condition: modbus-adaptor.enabled
     tags:
       - octopus-adaptor
     enabled: true
   - name: opcua-adaptor
+    repository: file://charts/ble-adaptor
     version: 0.1.0
     condition: opcua-adaptor.enabled
     tags:
       - octopus-adaptor
     enabled: true
   - name: mqtt-adaptor
+    repository: file://charts/ble-adaptor
     version: 0.1.0
     condition: mqtt-adaptor.enabled
     tags:
       - octopus-adaptor
     enabled: true
   - name: octopus-ui
+    repository: file://charts/ble-adaptor
     version: 0.1.0
     condition: octopus-ui.enabled
     tags:
