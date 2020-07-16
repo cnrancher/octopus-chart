@@ -21,6 +21,7 @@ helm repo update
 
 To install the Octopus Chart into your Kubernetes/k3s cluster use:
 ```
+kubectl create ns octopus-system
 helm install --namespace octopus-system octopus octopus/octopus
 ```
 

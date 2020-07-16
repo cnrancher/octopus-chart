@@ -80,7 +80,7 @@ opcua-adaptor:
 octopus-ui:
   enabled: true
   image:
-    repository: cnrancher/octopus-ui
+    repository: cnrancher/octopus-api-server
     tag: master
   service:
     type: LoadBalancer
